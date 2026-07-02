@@ -536,12 +536,35 @@ const handlePremiumSignup = async () => {
   안샘은 이용 중인 구독 서비스를 선택하면 월 구독비, 절약 가능 금액,
   결제 일정과 무료체험 종료일을 한눈에 정리해주는 구독 관리 서비스입니다.
 </p>
+<div className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+  <p className="text-sm font-black text-slate-500">베타테스트 참여 혜택</p>
+
+  <div className="mt-3 grid gap-3 md:grid-cols-2">
+    <div className="rounded-2xl bg-slate-50 p-4">
+      <p className="text-sm font-black text-slate-900">
+        베타 참여자 전원
+      </p>
+      <p className="mt-2 break-keep text-sm font-bold leading-6 text-slate-600">
+        정식 출시 후 안샘 프리미엄 플랜 할인코드를 이메일로 보내드릴 예정입니다.
+      </p>
+    </div>
+
+    <div className="rounded-2xl bg-slate-950 p-4 text-white">
+      <p className="text-sm font-black text-white">
+        피드백 설문 참여자
+      </p>
+      <p className="mt-2 break-keep text-sm font-bold leading-6 text-slate-300">
+        설문까지 남겨주신 분들 중 추첨을 통해 50명에게 기프티콘을 드립니다.
+      </p>
+    </div>
+  </div>
+</div>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <button
               onClick={() => setStarted(true)}
               className="rounded-2xl bg-black px-8 py-4 text-lg font-bold text-white shadow-lg transition hover:scale-[1.02]"
             >
-              내 구독비 무료 진단하기
+              무료 진단하고 베타 혜택 받기
             </button>
             <button className="rounded-2xl border border-slate-300 bg-white px-8 py-4 text-lg font-bold text-slate-900">
               예상 소요시간 1분
