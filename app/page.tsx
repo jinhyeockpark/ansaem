@@ -9,6 +9,8 @@ import {
 } from "./data/services";
 const GOOGLE_FORM_ACTION_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSftspPGPFQvL7uXbaCZyKTDw_rdE9m-7IdN8EGU0_9GZgXl-A/formResponse";
+  const FEEDBACK_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLScAvSPCAjttlRlFAlQh9nMl84znOKrpMV-9eF5kzlvSaCbAwg/viewform?usp=pp_url";
 
 const GOOGLE_FORM_EMAIL_ENTRY_ID = "entry.184682562";
 
@@ -981,13 +983,41 @@ const handlePremiumSignup = async () => {
         <p className="mt-3 text-sm font-bold text-red-300">{emailError}</p>
       ) : (
         <p className="mt-3 break-keep text-xs font-bold text-slate-400">
-          입력한 이메일은 프리미엄 베타 오픈 알림 용도로만 사용됩니다.
+          입력한 이메일은 안샘 프리미엄 베타 오픈 안내, 할인코드 발송, 베타테스트 참여 확인 용도로만 사용됩니다.
         </p>
       )}
     </div>
   )}
 </div>
+<div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6">
+  <p className="text-sm font-black text-slate-500">베타테스트 혜택</p>
 
+  <h3 className="mt-2 text-2xl font-black">
+    안샘을 써보고 의견을 남겨주세요.
+  </h3>
+
+  <p className="mt-3 break-keep text-sm leading-6 text-slate-500">
+    베타테스트에 참여해주신 모든 분들께는 정식 출시 후 안샘 프리미엄
+    플랜 할인코드를 입력하신 이메일로 보내드릴 예정입니다.
+  </p>
+
+  <div className="mt-5 rounded-2xl bg-slate-50 p-5">
+    <p className="break-keep text-sm font-bold leading-6 text-slate-600">
+      피드백 설문까지 남겨주신 분들 중 추첨을 통해 50명에게 기프티콘을
+      보내드립니다. 남겨주신 의견은 안샘 서비스 개선과 앱 출시 준비에만
+      활용됩니다.
+    </p>
+  </div>
+
+  <a
+    href={FEEDBACK_FORM_URL}
+    target="_blank"
+    rel="noreferrer"
+    className="mt-5 flex w-full items-center justify-center rounded-2xl bg-slate-950 px-5 py-4 text-center font-black text-white"
+  >
+    피드백 남기고 혜택 받기
+  </a>
+</div>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <button
                 onClick={() => {
