@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { categories, services } from "./data/services";
+import {
+  categories,
+  services,
+  type Service,
+  type ServiceCategory,
+} from "./data/services";
 const GOOGLE_FORM_ACTION_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSftspPGPFQvL7uXbaCZyKTDw_rdE9m-7IdN8EGU0_9GZgXl-A/formResponse";
 
@@ -26,6 +31,7 @@ type SavedDiagnosisState = {
   creatorUsage?: string;
   aiUsage?: string;
   cancelHabit?: string;
+  customServices: Service[];
 };
 
 
@@ -132,6 +138,11 @@ export default function Home() {
   const [premiumEmail, setPremiumEmail] = useState("");
 const [emailSubmitted, setEmailSubmitted] = useState(false);
 const [emailError, setEmailError] = useState("");
+const [customServices, setCustomServices] = useState<Service[]>([]);
+const [customName, setCustomName] = useState("");
+const [customPrice, setCustomPrice] = useState("");
+const [customCategory, setCustomCategory] = useState<ServiceCategory>("OTT");
+const [customError, setCustomError] = useState("");
 const [hasLoadedSavedState, setHasLoadedSavedState] = useState(false);
   const [budget, setBudget] = useState("50000");
   const [ottUsage, setOttUsage] = useState("weekly");
@@ -161,6 +172,7 @@ useEffect(() => {
     if (parsed.creatorUsage) setCreatorUsage(parsed.creatorUsage);
     if (parsed.aiUsage) setAiUsage(parsed.aiUsage);
     if (parsed.cancelHabit) setCancelHabit(parsed.cancelHabit);
+    if (parsed.customServices) setCustomServices(parsed.customServices);
   } catch {
     window.localStorage.removeItem("subscriptionDiagnosisState");
   }
@@ -181,6 +193,7 @@ useEffect(() => {
     creatorUsage,
     aiUsage,
     cancelHabit,
+    customServices,
   };
 
   window.localStorage.setItem(
@@ -199,11 +212,17 @@ useEffect(() => {
   creatorUsage,
   aiUsage,
   cancelHabit,
+  customServices,
 ]);
+const allServices = useMemo(
+  () => [...services, ...customServices],
+  [customServices],
+);
   const selected = useMemo(
-    () => services.filter((service) => selectedServices.includes(service.id)),
-    [selectedServices]
-  );
+  () =>
+    allServices.filter((service) => selectedServices.includes(service.id)),
+  [allServices, selectedServices],
+);
 
   const monthlyTotal = selected.reduce((sum, service) => sum + service.price, 0);
 
@@ -394,6 +413,58 @@ const trialSchedule = useMemo(() => {
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
+  const addCustomService = () => {
+  const name = customName.trim();
+  const price = Number(customPrice.replace(/,/g, "").trim());
+
+  if (!name) {
+    setCustomError("구독 서비스 이름을 입력해주세요.");
+    return;
+  }
+
+  if (!price || price < 100) {
+    setCustomError("월 구독료를 100원 이상으로 입력해주세요.");
+    return;
+  }
+
+  const newService: Service = {
+    id: `custom-${Date.now()}`,
+    name,
+    category: customCategory,
+    price,
+    tags: ["직접 추가"],
+    note: "사용자가 직접 추가한 구독 서비스입니다.",
+    lastUpdated: "직접 입력",
+  };
+
+  setCustomServices((prev) => [...prev, newService]);
+  setSelectedServices((prev) => [...prev, newService.id]);
+
+  setCustomName("");
+  setCustomPrice("");
+  setCustomCategory("OTT");
+  setCustomError("");
+};
+
+const removeCustomService = (serviceId: string) => {
+  setCustomServices((prev) =>
+    prev.filter((service) => service.id !== serviceId),
+  );
+
+  setSelectedServices((prev) => prev.filter((id) => id !== serviceId));
+
+  setBillingDays((prev) => {
+    const next = { ...prev };
+    delete next[serviceId];
+    return next;
+  });
+
+  setTrialEndDates((prev) => {
+    const next = { ...prev };
+    delete next[serviceId];
+    return next;
+  });
+};
 const updateBillingDay = (serviceId: string, value: string) => {
   const numberValue = Number(value);
 
@@ -921,6 +992,11 @@ const handlePremiumSignup = async () => {
               <button
                 onClick={() => {
   setSelectedServices([]);
+  setCustomServices([]);
+setCustomName("");
+setCustomPrice("");
+setCustomCategory("OTT");
+setCustomError("");
   setBillingDays({});
   setTrialEndDates({});
   setShowResult(false);
@@ -1001,7 +1077,92 @@ const handlePremiumSignup = async () => {
             ))}
           </div>
         </div>
+<div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6">
+  <p className="text-sm font-black text-slate-500">직접 추가</p>
+  <h3 className="mt-2 text-2xl font-black">
+    목록에 없는 구독도 추가할 수 있어요.
+  </h3>
+  <p className="mt-3 break-keep text-sm leading-6 text-slate-500">
+    사용 중인 서비스가 목록에 없다면 서비스명과 월 구독료를 직접 입력해주세요.
+    추가한 구독도 월 구독비 계산과 진단 결과에 함께 반영됩니다.
+  </p>
 
+  <div className="mt-5 grid gap-3 md:grid-cols-[1fr_160px_180px_auto]">
+    <input
+      type="text"
+      value={customName}
+      onChange={(event) => {
+        setCustomName(event.target.value);
+        setCustomError("");
+      }}
+      placeholder="예: 밀리의서재"
+      className="rounded-2xl border border-slate-200 px-4 py-3 font-bold outline-none focus:border-slate-900"
+    />
+
+    <input
+      type="text"
+      value={customPrice}
+      onChange={(event) => {
+        setCustomPrice(event.target.value);
+        setCustomError("");
+      }}
+      placeholder="월 구독료"
+      className="rounded-2xl border border-slate-200 px-4 py-3 font-bold outline-none focus:border-slate-900"
+    />
+
+    <select
+      value={customCategory}
+      onChange={(event) =>
+        setCustomCategory(event.target.value as ServiceCategory)
+      }
+      className="rounded-2xl border border-slate-200 px-4 py-3 font-bold outline-none focus:border-slate-900"
+    >
+      {categories.map((category) => (
+        <option key={category} value={category}>
+          {category}
+        </option>
+      ))}
+    </select>
+
+    <button
+      type="button"
+      onClick={addCustomService}
+      className="rounded-2xl bg-slate-950 px-5 py-3 font-black text-white"
+    >
+      추가
+    </button>
+  </div>
+
+  {customError ? (
+    <p className="mt-3 text-sm font-bold text-red-500">{customError}</p>
+  ) : null}
+
+  {customServices.length > 0 ? (
+    <div className="mt-5 space-y-3">
+      {customServices.map((service) => (
+        <div
+          key={service.id}
+          className="flex flex-col gap-3 rounded-2xl bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div>
+            <p className="font-black">{service.name}</p>
+            <p className="text-sm font-bold text-slate-500">
+              {service.category} · 월 {money(service.price)}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => removeCustomService(service.id)}
+            className="rounded-xl bg-white px-4 py-2 text-sm font-black text-slate-600"
+          >
+            삭제
+          </button>
+        </div>
+      ))}
+    </div>
+  ) : null}
+</div>
         <div className="rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
           <p className="text-sm font-bold text-slate-500">STEP 2</p>
           <h2 className="mt-2 text-3xl font-black">실제로 얼마나 쓰고 있는지 알려주세요.</h2>
