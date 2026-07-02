@@ -525,7 +525,7 @@ const handlePremiumSignup = async () => {
       <main className="min-h-screen bg-[#f6f7fb] px-5 py-10 text-slate-950">
         <section className="mx-auto flex min-h-[80vh] max-w-5xl flex-col justify-center">
           <p className="mb-4 inline-flex w-fit rounded-full bg-black px-4 py-2 text-sm font-semibold text-white">
-            구독비 진단 테스트
+            안샘 베타테스트
           </p>
           <h1 className="max-w-3xl text-5xl font-black leading-tight tracking-tight md:text-7xl">
   매달 새는 구독비,
@@ -551,7 +551,7 @@ const handlePremiumSignup = async () => {
 
     <div className="rounded-2xl bg-slate-950 p-4 text-white">
       <p className="text-sm font-black text-white">
-        피드백 설문 참여자
+        피드백 설문 참여자 추가 혜택
       </p>
       <p className="mt-2 break-keep text-sm font-bold leading-6 text-slate-300">
         설문까지 남겨주신 분들 중 추첨을 통해 50명에게 기프티콘을 드립니다.
