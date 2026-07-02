@@ -570,6 +570,8 @@ const handlePremiumSignup = async () => {
               예상 소요시간 1분
             </button>
           </div>
+
+          <SiteFooter />
         </section>
       </main>
     );
@@ -1077,6 +1079,8 @@ setCustomError("");
               </button>
             </div>
           </div>
+          
+          <SiteFooter />
         </section>
       </main>
     );
@@ -1379,6 +1383,8 @@ setCustomError("");
             결과 확인하기
           </button>
         </div>
+
+        <SiteFooter />
       </section>
     </main>
   );
@@ -1416,6 +1422,36 @@ function Select({
     >
       {children}
     </select>
+  );
+}
+function SiteFooter() {
+  return (
+    <footer className="mt-12 border-t border-slate-200 pt-8 text-sm text-slate-500">
+      <div className="space-y-3 break-keep leading-6">
+        <p className="font-bold text-slate-700">
+          안샘은 현재 베타 테스트 중인 구독 관리 서비스입니다.
+        </p>
+
+        <p>
+          입력한 이메일은 안샘 프리미엄 베타 오픈 안내, 할인코드 발송,
+          베타테스트 참여 확인 및 이벤트 안내 용도로만 사용됩니다.
+        </p>
+
+        <p>
+          피드백 설문에 남겨주신 의견은 서비스 개선, 앱 출시 준비,
+          프리미엄 플랜 기획을 위한 참고 자료로만 활용됩니다.
+        </p>
+
+        <p>
+          개인정보 삭제 요청이나 문의는 피드백 폼을 통해 남겨주시면 확인 후
+          처리하겠습니다.
+        </p>
+
+        <p className="pt-2 text-xs font-bold text-slate-400">
+          © 2026 안샘. All rights reserved.
+        </p>
+      </div>
+    </footer>
   );
 }
 function ServiceBadges({
