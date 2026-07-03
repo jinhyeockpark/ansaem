@@ -524,6 +524,13 @@ const handlePremiumSignup = async () => {
     return (
       <main className="min-h-screen bg-[#f6f7fb] px-5 py-10 text-slate-950">
         <section className="mx-auto flex min-h-[80vh] max-w-5xl flex-col justify-center">
+          <div className="mb-6 flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-slate-950 shadow-lg ring-1 ring-slate-200">
+  <img
+    src="/icon.png"
+    alt="안샘 로고"
+    className="h-full w-full object-cover"
+  />
+</div>
           <p className="mb-4 inline-flex w-fit rounded-full bg-black px-4 py-2 text-sm font-semibold text-white">
             안샘 베타테스트
           </p>
