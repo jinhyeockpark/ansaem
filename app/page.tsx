@@ -410,11 +410,50 @@ const trialSchedule = useMemo(() => {
         new Date(`${b.endDate}T00:00:00`).getTime()
     );
 }, [selected, trialEndDates]);
-  const toggleService = (id: string) => {
-    setSelectedServices((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
+  const toggleService = (serviceId: string) => {
+  const isCurrentlySelected = selectedServices.includes(serviceId);
+
+  const conflictingServiceId =
+    serviceId === "coupang-play"
+      ? "coupang-wow"
+      : serviceId === "coupang-wow"
+        ? "coupang-play"
+        : null;
+
+  setSelectedServices((prev) => {
+    // 이미 선택된 서비스를 다시 누르면 선택 해제
+    if (prev.includes(serviceId)) {
+      return prev.filter((id) => id !== serviceId);
+    }
+
+    // 쿠팡플레이 또는 쿠팡와우를 선택하면
+    // 반대쪽 서비스는 자동으로 선택 해제
+    const servicesWithoutConflict = conflictingServiceId
+      ? prev.filter((id) => id !== conflictingServiceId)
+      : prev;
+
+    return [...servicesWithoutConflict, serviceId];
+  });
+
+  // 자동 해제되거나 직접 해제된 서비스의 입력값 정리
+  const serviceIdToClear = isCurrentlySelected
+    ? serviceId
+    : conflictingServiceId;
+
+  if (serviceIdToClear) {
+    setBillingDays((prev) => {
+      const next = { ...prev };
+      delete next[serviceIdToClear];
+      return next;
+    });
+
+    setTrialEndDates((prev) => {
+      const next = { ...prev };
+      delete next[serviceIdToClear];
+      return next;
+    });
+  }
+};
   const addCustomService = () => {
   const name = customName.trim();
   const price = Number(customPrice.replace(/,/g, "").trim());
@@ -1035,7 +1074,7 @@ const handlePremiumSignup = async () => {
 
   <div className="mt-5 rounded-2xl bg-slate-50 p-5">
     <p className="break-keep text-sm font-bold leading-6 text-slate-600">
-      피드백 설문까지 남겨주신 분들 중 추첨을 통해 50명에게 기프티콘을
+      피드백 설문까지 남겨주신 분들 중 추첨을 통해 다섯 분에게 기프티콘을
       보내드립니다. 남겨주신 의견은 안샘 서비스 개선과 앱 출시 준비에만
       활용됩니다.
     </p>
