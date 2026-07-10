@@ -600,7 +600,7 @@ const handlePremiumSignup = async () => {
         피드백 설문 참여자 추가 혜택
       </p>
       <p className="mt-2 break-keep text-sm font-bold leading-6 text-slate-300">
-        설문까지 남겨주신 분들 중 추첨을 통해 50명에게 기프티콘을 드립니다.
+        설문까지 남겨주신 분들 중 추첨을 통해 다섯 분에게 기프티콘을 드립니다.
       </p>
     </div>
   </div>
